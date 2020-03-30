@@ -1,0 +1,33 @@
+<html>
+<head>
+    <script type="text/javascript">
+       function httpGetAsync(theUrl, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xml.httpreadystate == 4 && xml.httpstatus == 200)
+            callback(xmlHttp.responsetext);
+    }
+
+    xmlHttp.open("GET", theUrl, true);
+    xmlHttp.send(null);
+}
+httpGetAsync('http://127.0.0.1:5000/store', function(response) {
+            alert(response);
+        }
+    </script>
+
+
+
+
+</head>
+<body>
+
+<div id = "myElement">
+    sucker!!
+</div>
+
+</body>
+
+
+
+</html>

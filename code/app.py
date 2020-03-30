@@ -1,5 +1,5 @@
 from flask import Flask,request
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api,reqparse
 from flask_jwt import JWT,jwt_required
 from security import authenticate,identity
 import os
@@ -12,6 +12,14 @@ pos = []
 
 
 class Po(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('price',
+                        type=float,
+                        required=True,
+                        help='mandatory',
+                        )
+    parser.add_argument('timepass',
+                        required=True)
     @jwt_required()
     def get(self,name):
         i = next((filter(lambda x:x["nbr"] == name,pos)),None)
@@ -21,7 +29,9 @@ class Po(Resource):
     def post(self,name):
         if next((filter(lambda x:x["nbr"] == name,pos)),None) is not None:
             return {'message':'a po with number {} exists'.format(name)},400
-        data = request.get_json()
+
+        data = Po.parser.parse_args()
+
         po = {'nbr': name,'price':data['price']}
         pos.append(po)
         return po,201
@@ -30,7 +40,8 @@ class Po(Resource):
         pos = list(filter(lambda x:x["nbr"] != name, pos))
         return {"message":'Attched item {} is deleted'.format(name)}
     def put(self,name):
-        data = request.get_json()
+
+        data = Po.parser.parse_args()
         s = next((filter(lambda x:x["nbr"] == name,pos)),None)
         if s is None:
             i = {"nbr":name,"price": data["price"]}
