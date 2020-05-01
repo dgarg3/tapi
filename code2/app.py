@@ -1,10 +1,11 @@
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
-from security import authenticate,identity as identity_function
 from resources.user import UserRegister
 from resources.po import Po,Pos
 from resources.cust import Cust,Custlist
+from security import authenticate,identity as identity_function
+
 import os
 import jsonify
 
