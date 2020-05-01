@@ -1,23 +1,20 @@
 
 from db import db
-class PoModel(db.Model):
-    __tablename__ = 'items'
+class CustModel(db.Model):
+    __tablename__ = 'cust'
 
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String(80))
-    price = db.Column(db.Float(precision=2))
 
-    cust_id = db.Column(db.Integer , db.ForeignKey('cust.id'))
-    customer = db.relationship('CustModel')
+    pos = db.relationship('PoModel',lazy = 'dynamic')
 
 
-    def __init__(self,name,price,cust_id):
+    def __init__(self,name):
         self.name = name
-        self.price = price
-        self.cust_id = cust_id
+
 
     def json_t(self):
-        return {'name':self.name,'price':self.price}
+        return {'name':self.name,'pos':[item.json() for item in self.items.all()]}
 
     @classmethod
     def find_by_name(cls,name):

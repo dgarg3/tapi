@@ -7,7 +7,7 @@ class UserRegister(Resource):
     parser.add_argument('username',
                         type=str,
                         required=True,
-                        help='mandatory',
+                        help='wat',
                         )
     parser.add_argument('password',
                         type=str,
@@ -16,16 +16,19 @@ class UserRegister(Resource):
                         )
     def post(self):
         data = UserRegister.parser.parse_args()
+        print(data)
         if UserModel.find_by_username(data['username']):
             return {"message":"User already exists"},400
 
-        conn = sqlite3.connect("tb.db")
-        cursor = conn.cursor()
-        query = "Insert into users values(Null,?,?)"
-        cursor.execute(query, (data['username'], data['password']))
-        conn.commit()
-        conn.close()
+        # conn = sqlite3.connect("tb.db")
+        # cursor = conn.cursor()
+        # query = "Insert into users values(Null,?,?)"
+        # cursor.execute(query, (data['username'], data['password']))
+        # conn.commit()
+        # conn.close()
+        user = UserModel(**data)
+        user.save_to_db()
 
-        return {"message": "user created successfully"}, 201
+        return user.json_t(), 201
 
 
